@@ -6,7 +6,7 @@ import './App.css'
 function App() {
   const [count, setCount] = useState(0)
 
-  return (
+  return ( //<> è un parent element necessario
     <>
       <div>
         <a href="https://vite.dev" target="_blank">
