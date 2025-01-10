@@ -17,7 +17,7 @@ import { Container, Row, Col, Form, Button } from "react-bootstrap";
 // dateTime -> string
 // smoking -> boolean
 // specialRequests -> string
-
+const URL= 'https://striveschool-api.herokuapp.com/api/reservation'
 class ReservationForm extends Component {
   state = {
     reservation: {
@@ -28,7 +28,39 @@ class ReservationForm extends Component {
       smoking: false,
       specialRequest: "",
     },
-  };
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault()
+    fetch(URL, {
+        method:'POST',
+        body:JSON.stringify(this.state.reservation),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then((response)=> {
+        if (response.ok) {
+            alert('prenotazione salvata')
+            this.setState({
+                reservation: {
+                    name: "",
+                    phone: "",
+                    numberOfPeople: "1",
+                    dateTime: "",
+                    smoking: false,
+                    specialRequest: "",
+                  },
+            })
+        } else {
+            throw new Error('La chiamata non è andata a buon fine')
+        }
+    })
+    .catch((error) => {
+        console.log(error)
+    })
+  }
+
   render() {
     return (
       <Container>
@@ -37,10 +69,10 @@ class ReservationForm extends Component {
             <div>
               <h2 className="text-center">Prenota un tavolo ORA!</h2>
             </div>
-            <Form>
+            <Form onSubmit={this.handleSubmit}>
               <Form.Group className="mb-3">
                 <Form.Label>Il tuo nome</Form.Label>
-                <Form.Control
+                <Form.Control required
                   value={this.state.reservation.name}
                   onChange={(e) =>{
                     this.setState({
@@ -57,7 +89,7 @@ class ReservationForm extends Component {
 
               <Form.Group className="mb-3">
                 <Form.Label>Numero di telefono</Form.Label>
-                <Form.Control type="tel"
+                <Form.Control required type="tel"
                 value={this.state.reservation.phone}
                 onChange={(e) =>{
                   this.setState({
@@ -95,7 +127,7 @@ class ReservationForm extends Component {
 
               <Form.Group className="mb-3">
                 <Form.Label>Per quando?</Form.Label>
-                <Form.Control type="datetime-local"
+                <Form.Control required type="datetime-local"
                 value={this.state.reservation.dateTime}
                 onChange={(e) =>{
                   this.setState({
